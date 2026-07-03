@@ -14,14 +14,21 @@ let messageQueue = [];
 
 app.post("/api/receive", (req, res) => {
   const msg = req.body;
-  if (msg && msg.message) {
+  let content = "";
+  if (msg && msg.text) {
+    content = msg.text;
+  } else if (msg && msg.message) {
+    content = msg.message;
+  }
+  if (content) {
     messageQueue.push({
       id: Date.now(),
-      message: msg.message,
+      message: content,
       sender: msg.sender || "",
       group: msg.group || "",
       time: new Date().toISOString(),
     });
+    console.log("Received:", content);
   }
   res.json({ status: "ok" });
 });
